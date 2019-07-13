@@ -1,5 +1,6 @@
 
 module.exports = (app) =>{
+    const helmet = require('helmet');
     const body = require('body-parser');
     //use body parser
     app.use(body.urlencoded({extended:false}));
@@ -21,7 +22,8 @@ module.exports = (app) =>{
  //use body parser
  app.use(body.urlencoded({extended:false}));
  app.use(body.json());
-
+//habilitar helmet
+app.use(helmet());
  //const get user
  const getUser = async obj => {
     return await usuario.findOne({

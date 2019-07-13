@@ -10,11 +10,12 @@
   "license": "ISC",
   "dependencies": {
     "babel": "^6.23.0",
+    "bcrypt": "^3.0.6",
     "body-parse": "^0.1.0",
     "consign": "^0.1.6",
     "express": "^4.17.1",
-    "bcrypt": "^3.0.6",
     "express-session": "^1.16.1",
+    "helmet": "^3.18.0",
     "json2csv": "^4.5.1",
     "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.1",
