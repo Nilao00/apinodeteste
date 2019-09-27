@@ -1,5 +1,4 @@
 var multer  = require('multer');
-
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
       cb(null, '../apiNodeteste/imagens');

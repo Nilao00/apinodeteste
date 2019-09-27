@@ -23,15 +23,11 @@ const Usuario = sequelize.conexao.db[1].define('usuarios',{
      password:{
         type: Sequelize.STRING(200),
         allowNull:false,
-              
-      
-     },
+       },
      tokenPassword:{
       type: Sequelize.STRING(250),
       allowNull:true,
-            
-    
-   },
+     },
      datecreate:{
          type:Sequelize.DATE,
          
@@ -43,8 +39,6 @@ const Usuario = sequelize.conexao.db[1].define('usuarios',{
      }
 })
 //Usuario.sync({force:true})
-
-
 return Usuario;
 }
 

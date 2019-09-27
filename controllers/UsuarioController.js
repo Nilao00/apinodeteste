@@ -1,15 +1,15 @@
 module.exports = (app) =>{
-      //declare model usuario
-      const usuario = app.models.usuario;
+    //declare version api
+    const version = "/v1/usuario";
+    //declare model usuario
+    const usuario = app.models.usuario;
     //imports libs
     const jwt = app.libs.libs[0];
     const jwtOptions = app.libs.libs[1];
     const bcrypt = app.libs.libs[2];
     const passport = app.libs.libs[4];
-    const body = app.libs.libs[6];
     const getUser = app.libs.libs[7];
-  
-   
+     
     //function check carateres especiais
    var specialChars = "<>@!#$%^&*()_+[]{}?:;|'\"\\,./~`-=";
    var checkForSpecialChar = function(string){
@@ -27,10 +27,10 @@ module.exports = (app) =>{
  #########################
   */  
 //cadastro de usuario
-    app.post('/usuario',(req,res)=>{
+    app.post(version+'/usuario',(req,res)=>{
     
         
-        if(!req.body.nome || req.body.nome== null || req.body.nome == ''){
+        if(req.body.nome == undefined || req.body.nome== null || req.body.nome == ''){
             res.json({
                 error:true,
                 data:"Favor Preencha o nome",
@@ -78,7 +78,7 @@ module.exports = (app) =>{
         usuario.findAndCountAll({where :{email:req.body.email}}).then(result=>{
             if(result.count == 0){
                 let payload = { id: result.rows.id };
-                let token = jwt.sign(payload, jwtOptions.secretOrKey,{expiresIn: 300});
+                let token = jwt.sign(payload, jwtOptions.secretOrKey,{expiresIn: 600});
         const{
             nome,
             email,
@@ -114,7 +114,7 @@ module.exports = (app) =>{
     });
     
   //login user
-  app.post('/login', async (req, res)=> {
+  app.post(version+'/login', async (req, res)=> {
     const { email, password } = req.body;
    
      if(req.body.email == null || req.body.email == '' || req.body.email == undefined){
@@ -138,7 +138,6 @@ module.exports = (app) =>{
       }
       const match = await bcrypt.compare(password, user.password);
       if (match) {
-     
         let payload = { id: user.id };
         let token = jwt.sign(payload, jwtOptions.secretOrKey,{expiresIn: 600});
         res.json({ msg: 'Você esta logado!', token: token,id:user.id, name:user.get('nome'),});
@@ -152,7 +151,7 @@ module.exports = (app) =>{
 }
   });
     //get all usuario
-    app.get('/usuarios',passport.authenticate('jwt', { session: false }),(req,res,next)=>{
+    app.get(version+'/usuarios',passport.authenticate('jwt', { session: false }),(req,res)=>{
         usuario.findAll({order:[['nome']],attributes: ['nome', 'email','telefone','datecreate']})
         .then(users=>res.json({
             error: false,
@@ -165,7 +164,7 @@ module.exports = (app) =>{
         }));
     });
    //Atualiza usuario
-    app.put('/usuarios/:id',(req,res,next)=>{
+    app.put(version+'/usuarios/:id',passport.authenticate('jwt', { session: false }),(req,res)=>{
         usuario.findOne({id:req.params.id}).then((user)=>{
         user.nome = req.body.nome
         user.email = req.body.email
@@ -184,7 +183,7 @@ module.exports = (app) =>{
     
     });
     //email forgot password
-    app.post('/forgotPassword',(req,res,next)=>{
+    app.post(version+'/forgotPassword',(req,res,next)=>{
         if(req.body.email == ''){
             req.json('email obrigatório');
         }
@@ -240,7 +239,7 @@ module.exports = (app) =>{
     })
     });
     //get User for id
-    app.get('/usuarios/:id',(req,res)=>{
+    app.get(version+'/usuarios/:id',passport.authenticate('jwt', { session: false }),(req,res)=>{
         usuario.findAndCountAll({where :{id:req.params.id},attributes: ['nome', 'email','telefone','datecreate']}).then(result=>{
     
         if(result.count > 0){
@@ -257,7 +256,7 @@ module.exports = (app) =>{
     });
     });
     //deletar usuario
-    app.delete('/usuarios/:id',(req,res,next)=>{
+    app.delete(version+'/usuarios/:id',passport.authenticate('jwt', { session: false }),(req,res)=>{
         usuario.destroy({where: {id :req.params.id}}).then(res.json({
             error:false,
             data:'Exclusão realizada'
@@ -268,7 +267,7 @@ module.exports = (app) =>{
         
     });
     //logout
-    app.post('/logout',(req,res,next)=>{
+    app.post(version+'/logout',(req,res,next)=>{
         res.status(200).send({ auth: false, token: null,data:'Você esta deslogado' });
         
     });

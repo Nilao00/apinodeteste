@@ -9,7 +9,7 @@ consign()
 .then('controllers')
 .into(app);
 
-app.listen(3000,'201.18.67.132',()=>{
+app.listen(process.env.PORT || 3000,()=>{
     console.log('Servidor rodando');
 })
 
